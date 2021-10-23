@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.iot.stream.dao.mysql.EdgeCameraStreamMapper" >
+    <resultMap id="StreamResultMap" type="com.iot.stream.model.domain.EdgeCameraStream" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="stream_name" property="streamName" jdbcType="VARCHAR" />
+        <result column="camera_id" property="cameraId" jdbcType="BIGINT" />
+        <result column="erasure_set_id" property="erasureSetId" jdbcType="BIGINT" />
+        <result column="start_time" property="startTime" jdbcType="DATE" />
+        <result column="end_time" property="endTime" jdbcType="DATE" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT" />
+        <result column="create_time" property="createTime" jdbcType="DATE" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="last_operator_id" property="lastOperatorId" jdbcType="BIGINT" />
+        <result column="update_time" property="updateTime" jdbcType="DATE" />
+    </resultMap>
+    <insert id="saveEdgeCameraStream" parameterType="com.iot.stream.model.domain.EdgeCameraStream" useGeneratedKeys="true" keyProperty="id">
+        insert into edge_camera_stream (stream_name, camera_id, erasure_set_id, start_time, end_time,
+        create_by, creator_id, create_time, update_by, last_operator_id, update_time)
+        values (#{streamName}, #{cameraId}, #{erasureSetId}, #{startTime}, #{endTime},
+        #{createBy}, #{creatorId}, #{createTime}, #{updateBy}, #{lastOperatorId}, #{updateTime})
+    </insert>
+
+    <delete id="deleteEdgeCameraStreamByIds" parameterType="java.lang.Long">
+        delete from edge_camera_stream where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateEdgeCameraStream" parameterType="com.iot.stream.model.domain.EdgeCameraStream">
+        update edge_camera_stream
+        <set>
+            <if test="stream_name != null and stream_name != ''"> stream_name = #{streamName },</if>
+            <if test="camera_id != null and camera_id != ''"> camera_id = #{cameraId },</if>
+            <if test="erasure_set_id != null and erasure_set_id != ''"> erasure_set_id = #{erasureSetId },</if>
+            <if test="start_time != null and start_time != ''"> start_time = #{startTime },</if>
+            <if test="end_time != null and end_time != ''"> end_time = #{endTime },</if>
+            <if test="create_by != null and create_by != ''"> create_by = #{createBy },</if>
+            <if test="creator_id != null and creator_id != ''"> creator_id = #{creatorId },</if>
+            <if test="create_time != null and create_time != ''"> create_time = #{createTime },</if>
+            <if test="update_by != null and update_by != ''"> update_by = #{updateBy },</if>
+            <if test="last_operator_id != null and last_operator_id != ''"> last_operator_id = #{lastOperatorId },</if>
+            update_time = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+    <select id="selectEdgeCameraStreamList" parameterType="com.iot.stream.model.domain.EdgeCameraStream" resultMap="StreamResultMap">
+        select * from edge_camera_stream
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id }
+            </if>
+            <if test="stream_name != null and stream_name != ''">
+                and stream_name like concat('%', #{streamName}, '%')
+            </if>
+            <if test="camera_id != null and camera_id != ''">
+                and camera_id = #{cameraId }
+            </if>
+            <if test="erasure_set_id != null and erasure_set_id != ''">
+                and erasure_set_id = #{erasureSetId }
+            </if>
+        </where>
+    </select>
+</mapper>

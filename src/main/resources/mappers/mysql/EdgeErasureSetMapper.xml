@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.iot.stream.dao.mysql.EdgeErasureSetMapper" >
+    <resultMap id="SetResultMap" type="com.iot.stream.model.domain.EdgeErasureSet" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="access_key" property="accessKey" jdbcType="VARCHAR" />
+        <result column="secret_key" property="secretKey" jdbcType="VARCHAR" />
+        <result column="state" property="state" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT" />
+        <result column="create_time" property="createTime" jdbcType="DATE" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="last_operator_id" property="lastOperatorId" jdbcType="BIGINT" />
+        <result column="update_time" property="updateTime" jdbcType="DATE" />
+    </resultMap>
+    <insert id="saveEdgeErasureSet" parameterType="com.iot.stream.model.domain.EdgeErasureSet" useGeneratedKeys="true" keyProperty="id">
+        insert into edge_erasure_set (name, access_key, secret_key, state,
+        create_by, creator_id, create_time, update_by, last_operator_id, update_time)
+        values (#{name}, #{accessKey}, #{secretKey}, #{state},
+        #{createBy}, #{creatorId}, #{createTime}, #{updateBy}, #{lastOperatorId}, #{updateTime})
+    </insert>
+
+    <delete id="deleteEdgeErasureSetById" parameterType="java.lang.Long">
+        delete from edge_erasure_set where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateEdgeErasureSet" parameterType="com.iot.stream.model.domain.EdgeErasureSet">
+        update edge_erasure_set
+        <set>
+            <if test="name != null and name != ''"> name = #{name },</if>
+            <if test="access_key != null and access_key != ''"> access_key = #{accessKey },</if>
+            <if test="secret_key != null and secret_key != ''"> secret_key = #{secretKey },</if>
+            <if test="state != null and state != ''"> state = #{state },</if>
+            <if test="create_by != null and create_by != ''"> create_by = #{createBy },</if>
+            <if test="creator_id != null and creator_id != ''"> creator_id = #{creatorId },</if>
+            <if test="create_time != null and create_time != ''"> create_time = #{createTime },</if>
+            <if test="update_by != null and update_by != ''"> update_by = #{updateBy },</if>
+            <if test="last_operator_id != null and last_operator_id != ''"> last_operator_id = #{lastOperatorId },</if>
+            update_time = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+    <select id="selectEdgeErasureSetList" parameterType="com.iot.stream.model.domain.EdgeErasureSet" resultMap="SetResultMap">
+        select * from edge_erasure_set
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id }
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name }
+            </if>
+            <if test="state != null and state != ''">
+                and state = #{state }
+            </if>
+        </where>
+    </select>
+</mapper>

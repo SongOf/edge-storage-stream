@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iot.stream.dao.tdengine.TdEdgeCameraMapper">
+    <resultMap id="BaseResultMap" type="com.iot.stream.model.domain.EdgeCameraMeta">
+        <id column="ts" jdbcType="TIMESTAMP" property="ts"/>
+        <result column="camera_id" jdbcType="NCHAR" property="cameraId"/>
+        <result column="object_name" jdbcType="NCHAR" property="objectName"/>
+        <result column="stream_id" jdbcType="BIGINT" property="streamId"/>
+        <result column="erasure_set_id" jdbcType="BIGINT" property="erasureSetId"/>
+    </resultMap>
+
+    <update id="dropDB">
+        drop
+        database if exists td_edge_camera
+    </update>
+
+    <update id="createDB">
+        create
+        database if not exists td_edge_camera
+    </update>
+
+    <update id="createSuperTable">
+        create table if not exists camera ( ts TIMESTAMP, object_name NCHAR(250))
+        tags ( stream_id BIGINT, erasure_set_id BIGINT)
+    </update>
+
+    <update id="createTable" parameterType="com.iot.stream.model.domain.EdgeCameraMeta">
+        create table if not exists #{cameraId} using camera tags
+        ( #{streamId}, #{erasureSetId})
+    </update>
+
+    <insert id="insertData" parameterType="com.iot.stream.model.domain.EdgeCameraMeta">
+        insert into #{cameraId} (ts, object_name)
+        values (#{ts}, #{objectName})
+    </insert>
+
+    <select id="simpleSelect" resultMap="BaseResultMap">
+        select ts, object_name
+        from #{cameraId}
+        order by ts
+        <if test="limit != null">
+            limit #{limit}
+        </if>
+        <if test="offset != null">
+            offset #{offset}
+        </if>
+    </select>
+
+<!--    <select id="selectNow" parameterType="com.iot.model.domain.EdgeCameraMeta" resultMap="BaseResultMap">-->
+<!--        select * from #{cameraId}-->
+<!--    </select>-->
+
+<!--    <select id="selectBetween" parameterType="com.iot.model.domain.EdgeCameraMeta" resultMap="BaseResultMap">-->
+<!--        select * from #{cameraId} where ts >= #{start}-->
+<!--    </select>-->
+</mapper>

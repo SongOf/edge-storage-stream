@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.iot.stream.dao.mysql.EdgeDataNodeMapper" >
+    <resultMap id="NodeResultMap" type="com.iot.stream.model.domain.EdgeDataNode" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="node_ip" property="nodeIp" jdbcType="VARCHAR" />
+        <result column="node_port" property="nodePort" jdbcType="VARCHAR" />
+        <result column="volume" property="volume" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT" />
+        <result column="create_time" property="createTime" jdbcType="DATE" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="last_operator_id" property="lastOperatorId" jdbcType="BIGINT" />
+        <result column="update_time" property="updateTime" jdbcType="DATE" />
+    </resultMap>
+
+    <insert id="saveEdgeDataNode" parameterType="com.iot.stream.model.domain.EdgeDataNode" useGeneratedKeys="true" keyProperty="id">
+        insert into edge_data_node (name, node_ip, node_port, volume,
+        create_by, creator_id, create_time, update_by, last_operator_id, update_time)
+        values (#{name}, #{nodeIp}, #{nodePort}, #{volume},
+        #{createBy}, #{creatorId}, #{createTime}, #{updateBy}, #{lastOperatorId}, #{updateTime})
+    </insert>
+
+    <delete id="deleteEdgeDataNodeById" parameterType="java.lang.Long">
+        delete from edge_data_node where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateEdgeDataNode" parameterType="com.iot.stream.model.domain.EdgeDataNode">
+        update edge_data_node
+        <set>
+            <if test="name != null and name != ''"> name = #{name },</if>
+            <if test="node_ip != null and node_ip != ''"> node_ip = #{nodeIp },</if>
+            <if test="node_port != null and node_port != ''"> node_port = #{nodePort },</if>
+            <if test="volume != null and volume != ''"> volume = #{volume },</if>
+            <if test="create_by != null and create_by != ''"> create_by = #{createBy },</if>
+            <if test="creator_id != null and creator_id != ''"> creator_id = #{creatorId },</if>
+            <if test="create_time != null and create_time != ''"> create_time = #{createTime },</if>
+            <if test="update_by != null and update_by != ''"> update_by = #{updateBy },</if>
+            <if test="last_operator_id != null and last_operator_id != ''"> last_operator_id = #{lastOperatorId },</if>
+            update_time = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+    <select id="selectEdgeDataNodeList" parameterType="com.iot.stream.model.domain.EdgeDataNode" resultMap="NodeResultMap">
+        select * from edge_data_node
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id }
+            </if>
+            <if test="name != null and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="node_ip != null and node_ip != ''">
+                and node_ip = #{nodeIp }
+            </if>
+            <if test="node_port != null and node_port != ''">
+                and node_port = #{nodePort }
+            </if>
+            <if test="volume != null and volume != ''">
+                and volume = #{volume }
+            </if>
+        </where>
+    </select>
+</mapper>

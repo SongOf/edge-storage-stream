@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.iot.stream.dao.mysql.EdgeCameraMapper" >
+    <resultMap id="CameraResultMap" type="com.iot.stream.model.domain.EdgeCamera" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="mapper_id" property="mapperId" jdbcType="BIGINT" />
+        <result column="serial_number" property="serialNumber" jdbcType="BIGINT" />
+        <result column="validate_code" property="validateCode" jdbcType="VARCHAR" />
+        <result column="ip" property="ip" jdbcType="VARCHAR" />
+        <result column="protocol" property="protocol" jdbcType="VARCHAR" />
+        <result column="url" property="url" jdbcType="VARCHAR" />
+        <result column="state" property="state" jdbcType="VARCHAR" />
+        <result column="version" property="version" jdbcType="BIGINT" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="creator_id" property="creatorId" jdbcType="BIGINT" />
+        <result column="create_time" property="createTime" jdbcType="DATE" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+        <result column="last_operator_id" property="lastOperatorId" jdbcType="BIGINT" />
+        <result column="update_time" property="updateTime" jdbcType="DATE" />
+    </resultMap>
+    <select id="selectEdgeCameraById" parameterType="java.lang.Long" resultMap="CameraResultMap">
+        select * from edge_camera where id = #{id }
+    </select>
+    <select id="selectAll" resultMap="CameraResultMap">
+        select * from edge_camera
+    </select>
+</mapper>
